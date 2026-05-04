@@ -20,7 +20,7 @@ This `README.md` file describes how to use the `aws_ddns.py` script in the `aws_
 ╰──────────────────────────────────────────────────────────────────────────────╯
 ```
 
-## Prerequisites
+## Prerequisites
 
 To use this script effectively you will need:
 
@@ -66,4 +66,3 @@ where the `hosted_zone_id` can be obtained from the Route 53 interface, and `[DO
 - configuration information is loaded (by default from `~/.aws_ddns.toml` but this can be changed with the `--configpath` option)
 - the current public-facing external IP of the machine is checked (by default, at `https://checkip.amazonaws.com`, but this can be changed with the `--ip-service` option). 
 - local `boto3` authentication is used to connect to Route 53 using the configuration options to identify the IP address currently associated with the domain name. If this matches the current external IP address, the script exits. Otherwise, the script will update the Route 53 record.
-
