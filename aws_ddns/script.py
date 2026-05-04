@@ -69,7 +69,7 @@ def make_json_update(ipaddr: str, config: dict) -> dict:
 
 
 @app.command()
-def main(configpath: Path=Path.home() / ".aws_ddns.toml",
+def main(configpath: Path = typer.Option(Path.home() / ".aws_ddns.toml", "--configpath"),
          ipservice: str = typer.Option("https://checkip.amazonaws.com", "--ip-service"), 
          log_level: str = typer.Option("INFO", "--log-level")) -> None:
     """Update a Route 53 record with the current external IP address"""
