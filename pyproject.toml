@@ -27,5 +27,5 @@ include = ["aws_ddns"]
 "aws_ddns" = "aws_ddns.script:app"
 
 [project.urls]
-Homepage = "https://github.com/widdowquinn/aws_ddns"
-Issues = "https://github.com/widdowquinn/aws_ddns/issues"
+Homepage = "https://github.com/widdowquinn/aws_dynamic_dns"
+Issues = "https://github.com/widdowquinn/aws_dynamic_dns/issues"
