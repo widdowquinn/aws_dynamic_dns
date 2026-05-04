@@ -45,6 +45,8 @@ This will install the `aws_ddns` script, which you should be able to check using
 aws_ddns --help
 ```
 
+After installation, the script can be set to run at regular intervals using a `cron` job.
+
 ## Configuration
 
 `aws_ddns` uses your local AWS credentials _via_ `boto3`, and will not ask for authentication information.
