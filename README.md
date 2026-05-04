@@ -1,4 +1,4 @@
-# README.md `aws_ddns.py`
+# README.md `aws_dynamic_dns`
 
 This `README.md` file describes how to use the `aws_ddns.py` script in the `aws_dynamic_ddns` repository to use AWS Route 53 as a dynamic DNS service.
 
