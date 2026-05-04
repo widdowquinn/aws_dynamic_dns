@@ -25,8 +25,8 @@ from rich.pretty import pretty_repr
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(levelname)s - %(message)s',
-    handlers=[logging.StreamHandler(sys.stderr)]
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    handlers=[logging.StreamHandler(sys.stderr)],
 )
 logger = logging.getLogger(__name__)
 
@@ -69,13 +69,15 @@ def make_json_update(ipaddr: str, config: dict) -> dict:
 
 
 @app.command()
-def main(configpath: Path = typer.Option(Path.home() / ".aws_ddns.toml", "--configpath"),
-         ipservice: str = typer.Option("https://checkip.amazonaws.com", "--ip-service"), 
-         log_level: str = typer.Option("INFO", "--log-level")) -> None:
+def main(
+    configpath: Path = typer.Option(Path.home() / ".aws_ddns.toml", "--configpath"),
+    ipservice: str = typer.Option("https://checkip.amazonaws.com", "--ip-service"),
+    log_level: str = typer.Option("INFO", "--log-level"),
+) -> None:
     """Update a Route 53 record with the current external IP address"""
     # Set log level based on user input
     logger.setLevel(getattr(logging, log_level.upper()))
-    
+
     # Load TOML config
     config = load_toml_config(configpath)
     logger.debug(f"Processing config file: {configpath}\n{pretty_repr(config)}")
