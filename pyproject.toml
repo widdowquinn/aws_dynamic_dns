@@ -1,0 +1,31 @@
+[project]
+name = "aws_ddns"
+version = "1.0.0"
+authors = [
+    { name = "Leighton Pritchard", email = "leighton.pritchard@strath.ac.uk" },
+]
+readme = "README.md"
+requires-python = ">=3.13"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "boto3",
+    "typer",
+]
+
+[build-system]
+requires = ["setuptools>=61.0", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["aws_ddns"]
+
+[project.scripts]
+"aws_ddns" = "aws_ddns.script:app"
+
+[project.urls]
+Homepage = "https://github.com/widdowquinn/aws_ddns"
+Issues = "https://github.com/widdowquinn/aws_ddns/issues"
