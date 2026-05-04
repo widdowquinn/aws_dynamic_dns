@@ -1,0 +1,11 @@
+# Python cruft
+__pycache__/
+
+# Python distribution/installation
+*.egg-info
+
+# macOS cruft
+.DS_Store
+
+# editor cruft
+*~
