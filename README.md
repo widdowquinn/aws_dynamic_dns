@@ -45,7 +45,13 @@ This will install the `aws_ddns` script, which you should be able to check using
 aws_ddns --help
 ```
 
-After installation, the script can be set to run at regular intervals using a `cron` job.
+After installation, the script can be set to run at regular intervals using a `cron` job, e.g.
+
+```text
+*/5 * * * * [PATH_TO]/aws_ddns 
+```
+
+to run every five minutes
 
 ## Configuration
 
@@ -68,3 +74,13 @@ where the `hosted_zone_id` can be obtained from the Route 53 interface, and `[DO
 - configuration information is loaded (by default from `~/.aws_ddns.toml` but this can be changed with the `--configpath` option)
 - the current public-facing external IP of the machine is checked (by default, at `https://checkip.amazonaws.com`, but this can be changed with the `--ip-service` option). 
 - local `boto3` authentication is used to connect to Route 53 using the configuration options to identify the IP address currently associated with the domain name. If this matches the current external IP address, the script exits. Otherwise, the script will update the Route 53 record.
+
+### Logging
+
+By default, output is logged to STDERR, but on macOS output is also logged to the [unified logging system](https://developer.apple.com/documentation/os/os_log). Messages are logged to the `aws_ddns` subsystem, and can be caught streaming with:
+
+```bash
+log stream --predicate 'subsystem == "aws_ddns"' --level debug
+```
+
+or in the Console app.

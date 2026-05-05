@@ -13,6 +13,7 @@ classifiers = [
 ]
 dependencies = [
     "boto3",
+    "pyoslog",
     "typer",
 ]
 
