@@ -17,18 +17,27 @@ import tomllib
 from pathlib import Path
 from urllib import request
 
-import boto3
-import typer
+import boto3  # type: ignore[import-not-found]
+import pyoslog  # type: ignore[import-not-found]
+import typer  # type: ignore[import-not-found]
 
-from rich.pretty import pretty_repr
+from rich.pretty import pretty_repr  # type: ignore[import-not-found]
 
 # Configure logging
+LOG_IDENT = "aws_ddns"
+
+if pyoslog.is_supported():
+    PLOG = True
+    plog = pyoslog.os_log_create(subsystem=LOG_IDENT, category="main")
+
 logging.basicConfig(
     level=logging.INFO,
-    format="%(asctime)s - %(levelname)s - %(message)s",
-    handlers=[logging.StreamHandler(sys.stderr)],
+    format=f"%(asctime)s - {LOG_IDENT}: %(levelname)s - %(message)s",
+    handlers=[
+        logging.StreamHandler(sys.stderr),
+    ],
 )
-logger = logging.getLogger(__name__)
+logger = logging.getLogger(LOG_IDENT)
 
 # Make the script a typer appplication
 app = typer.Typer()
@@ -81,14 +90,23 @@ def main(
     # Load TOML config
     config = load_toml_config(configpath)
     logger.debug(f"Processing config file: {configpath}\n{pretty_repr(config)}")
+    if PLOG:
+        pyoslog.os_log_debug(
+            plog,
+            f"Processing config file: {configpath}\n{pretty_repr(config)}",
+        )
 
     # Get local public IP address
     try:
         ipaddr = get_current_ip(ipservice)
     except ValueError as err:
         logger.error(err)
+        if PLOG:
+            pyoslog.os_log_error(plog, str(err))
         sys.exit(1)
     logger.info(f"Current public IP address: {ipaddr}")
+    if PLOG:
+        pyoslog.os_log_info(plog, f"Current public IP address: {ipaddr}")
 
     # Connect to Route53
     client = boto3.client("route53")
@@ -101,17 +119,29 @@ def main(
         "Value"
     ]
     logger.info(f"Current Route 53 IP address: {current_r53_ipaddr}")
+    if PLOG:
+        pyoslog.os_log_info(plog, f"Current Route 53 IP address: {current_r53_ipaddr}")
 
     if ipaddr == current_r53_ipaddr:
-        logger.info("IP has not changed, exiting")
+        logger.info(f"IP has not changed ({ipaddr}), exiting")
+        if PLOG:
+            pyoslog.os_log_error(plog, f"IP has not changed ({ipaddr}), exiting")
         sys.exit(0)
     else:
         changebatch = make_json_update(ipaddr, config)
         logger.debug(f"Making Route 53 batch call:\n{pretty_repr(changebatch)}")
+        if PLOG:
+            pyoslog.os_log_debug(
+                plog, f"Making Route 53 batch call:\n{pretty_repr(changebatch)}"
+            )
         retval = client.change_resource_record_sets(
             HostedZoneId=config["hosted_zone_id"], ChangeBatch=changebatch
         )
         logger.debug(f"Route 53 call returns: \n {pretty_repr(retval)}")
+        if PLOG:
+            pyoslog.os_log_debug(
+                plog, f"Route 53 call returns: \n {pretty_repr(retval)}"
+            )
 
 
 if __name__ == "__main__":
